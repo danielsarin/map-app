@@ -1,6 +1,6 @@
 $(document).ready(function() {
    
-   $("#searchButton").click(function() {
+   $(document).on("click", "#searchButton", function() {
         var keyword = $("#searchField").val();
         
         var sparqlQuery = 'prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>  \
@@ -30,18 +30,34 @@ $(document).ready(function() {
     var encodedQuery = encodeURIComponent(sparqlQuery);
         
         $.ajax({ url: "http://data.aalto.fi/sparql?query="+encodedQuery+"&output=json",
-               cache: false,
-               dataType: 'jsonp',
-               success: function(data){
-                // node = jQuery.parseJSON(data);
-                // var table = $
-                console.log(data);
-                }
+			cache: false,
+			dataType: 'jsonp',
+			success: function(data) {
+				$("#myPlaces").hide();
+				$("#searchResults").show();
+				$("#searchResults").html("");
+				
+				var bindings = data.results.bindings;
+				for (i in bindings) {
+					var item = '<li><a href="#map" data-lat="'+bindings[i].lat.value+'" data-long="'+bindings[i].long.value+'">'+bindings[i].name.value+'</a></li>';
+					$("#searchResults").append(item);
+				}
+				
+			}
         });    
     });
     
     
-      var queryUrl = "http://publishmydata.com/sparql.json?q=PREFIX+rdfs%3A+%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0D%0A%0D%0ASELECT+%3Fname+%3Fnorthing+%3Feasting+WHERE+%7B%0D%0A%0D%0A++%3Fschool+%3Chttp%3A%2F%2Feducation.data.gov.uk%2Fdef%2Fschool%2FdistrictAdministrative%3E+%3Chttp%3A%2F%2Fstatistics.data.gov.uk%2Fid%2Flocal-authority-district%2F00BN%3E+.+%0D%0A%0D%0A++%3Fschool+rdfs%3Alabel+%3Fname+.%0D%0A%0D%0A++%3Fschool+%3Chttp%3A%2F%2Feducation.data.gov.uk%2Fdef%2Fschool%2FphaseOfEducation%3E+%3Chttp%3A%2F%2Feducation.data.gov.uk%2Fdef%2Fschool%2FPhaseOfEducation_Secondary%3E+.%0D%0A%0D%0A++%3Fschool+%3Chttp%3A%2F%2Fdata.ordnancesurvey.co.uk%2Fontology%2Fspatialrelations%2Fnorthing%3E+%3Fnorthing+.%0D%0A%0D%0A++%3Fschool+%3Chttp%3A%2F%2Fdata.ordnancesurvey.co.uk%2Fontology%2Fspatialrelations%2Feasting%3E+%3Feasting+.%0D%0A%7D";
+    $(document).on("click", "#searchResults a", function() {
+    
+    	var mapOptions = {
+			zoom: 12,
+			center: new google.maps.LatLng(this.getAttribute("data-lat"), this.getAttribute("data-long")),
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        google.maps.event.trigger(map, 'resize');
+    });
     
     
 });
