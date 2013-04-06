@@ -1,12 +1,16 @@
-body {
-    /*background-color: #CCCCCC;*/
+html, body {
+    height: 100%;
 }
 
 #searchResults {
 	display: none;
 }
 
+#map, #map-container {
+    height: 90%;
+}
+
 #map-canvas {
-	width: 600px;
-	height: 400px;
+	width: 100%;
+	height: 100%;
 }

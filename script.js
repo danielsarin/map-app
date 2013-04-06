@@ -29,6 +29,7 @@ $(document).ready(function() {
     
     var encodedQuery = encodeURIComponent(sparqlQuery);
         
+        $.mobile.loading('show');
         $.ajax({ url: "http://data.aalto.fi/sparql?query="+encodedQuery+"&output=json",
 			cache: false,
 			dataType: 'jsonp',
@@ -42,21 +43,30 @@ $(document).ready(function() {
 					var item = '<li><a href="#map" data-lat="'+bindings[i].lat.value+'" data-long="'+bindings[i].long.value+'">'+bindings[i].name.value+'</a></li>';
 					$("#searchResults").append(item);
 				}
+				$("#searchResults").listview('refresh');
 				
+			},
+			complete: function() {
+			    $.mobile.loading('hide');
 			}
         });    
     });
     
     
     $(document).on("click", "#searchResults a", function() {
-    
-    	var mapOptions = {
-			zoom: 12,
-			center: new google.maps.LatLng(this.getAttribute("data-lat"), this.getAttribute("data-long")),
-			mapTypeId: google.maps.MapTypeId.ROADMAP
-        };
-        var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-        google.maps.event.trigger(map, 'resize');
+        var lat = this.getAttribute("data-lat");
+        var long = this.getAttribute("data-long");
+        $("#map").on("pageshow", function() {
+            
+            var mapOptions = {
+			    zoom: 12,
+			    center: new google.maps.LatLng(lat, long),
+			    mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            
+        });
+    	
     });
     
     
