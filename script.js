@@ -1,5 +1,22 @@
 $(document).ready(function() {
+
+    /* Initialize map */
+    var otaniemi = new google.maps.LatLng(60.18711,24.83192);
+    var mapOptions = {
+	    zoom: 15,
+	    center: otaniemi,
+	    mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    
+    // resize the map when the map page is shown
+    $("#map").on("pageshow", function() {
+        google.maps.event.trigger(map, 'resize');
+        map.setCenter(otaniemi);
+    });
    
+   
+   /* Execute a sparql query and show the results in a list */
    $(document).on("click", "#searchButton", function() {
         var keyword = $("#searchField").val();
         
@@ -27,7 +44,7 @@ $(document).ready(function() {
         } \
         GROUP BY ?name ?label ?address ?lat ?long';
     
-    var encodedQuery = encodeURIComponent(sparqlQuery);
+        var encodedQuery = encodeURIComponent(sparqlQuery);
         
         $.mobile.loading('show');
         $.ajax({ url: "http://data.aalto.fi/sparql?query="+encodedQuery+"&output=json",
@@ -53,18 +70,14 @@ $(document).ready(function() {
     });
     
     
+    /* Add place marker on map when a link is clicked */
     $(document).on("click", "#searchResults a", function() {
         var lat = this.getAttribute("data-lat");
         var long = this.getAttribute("data-long");
-        $("#map").on("pageshow", function() {
-            
-            var mapOptions = {
-			    zoom: 12,
-			    center: new google.maps.LatLng(lat, long),
-			    mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
-            var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-            
+        
+        var marker = new google.maps.Marker({
+            map: map,
+            position: new google.maps.LatLng(lat, long)
         });
     	
     });
