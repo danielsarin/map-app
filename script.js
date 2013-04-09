@@ -8,17 +8,30 @@ $(document).ready(function() {
 	    mapTypeId: google.maps.MapTypeId.ROADMAP
     };
     var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+    var markers = []; // store all map markers here
+    
+    // function for removing markers
+    function removeMarkers() {
+        for (var i = 0; i < markers.length; i++ ) {
+            markers[i].setMap(null);
+        }
+    }
     
     // resize the map when the map page is shown
     $("#map").on("pageshow", function() {
         google.maps.event.trigger(map, 'resize');
         map.setCenter(otaniemi);
     });
-   
-   
-   /* Execute a sparql query and show the results in a list */
-   $(document).on("click", "#searchButton", function() {
+    
+    
+    
+    /* Execute a sparql query and show the results in a list */
+    $(document).on("click", "#searchButton", function() {
         var keyword = $("#searchField").val();
+        
+        if (keyword == "") {
+            return;
+        }
         
         var sparqlQuery = 'prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>  \
         prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#> \
@@ -57,7 +70,7 @@ $(document).ready(function() {
 				
 				var bindings = data.results.bindings;
 				for (i in bindings) {
-					var item = '<li><a href="#map" data-lat="'+bindings[i].lat.value+'" data-long="'+bindings[i].long.value+'">'+bindings[i].name.value+'</a></li>';
+					var item = '<li><a href="#map" data-lat="'+bindings[i].lat.value+'" data-long="'+bindings[i].long.value+'"><h2>'+bindings[i].name.value+'</h2><p>'+bindings[i].address.value+'</p></a></li>';
 					$("#searchResults").append(item);
 				}
 				$("#searchResults").listview('refresh');
@@ -71,14 +84,17 @@ $(document).ready(function() {
     
     
     /* Add place marker on map when a link is clicked */
-    $(document).on("click", "#searchResults a", function() {
-        var lat = this.getAttribute("data-lat");
-        var long = this.getAttribute("data-long");
+    $(document).on("click", "#searchResults a, #placesList a", function() {
+        var lat = $(this).attr("data-lat");
+        var long = $(this).attr("data-long");
         
+        removeMarkers();
         var marker = new google.maps.Marker({
             map: map,
-            position: new google.maps.LatLng(lat, long)
+            position: new google.maps.LatLng(lat, long),
+            title: $(this).text()
         });
+        markers.push(marker);
     	
     });
     
