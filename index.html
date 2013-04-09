@@ -25,6 +25,7 @@
           <li><a href="#home"><i class="icon-home icon-white"></i> Home</a></li>
           <li><a href="#map"><i class="icon-globe icon-white"></i> Map</a></li>
           <li><a href="#places"><i class="icon-map-marker icon-white"></i> Places</a></li>
+          <li><a href="#events"><i class="icon-calendar icon-white"></i> Events</a></li>
         </ul>
       </div>
     </div>
@@ -43,6 +44,7 @@
     
   </div>
   
+  
   <div data-role="page" id="map">
   
     <div data-role="header" data-position="fixed">
@@ -51,6 +53,7 @@
           <li><a href="#home"><i class="icon-home icon-white"></i> Home</a></li>
           <li><a href="#map"><i class="icon-globe icon-white"></i> Map</a></li>
           <li><a href="#places"><i class="icon-map-marker icon-white"></i> Places</a></li>
+          <li><a href="#events"><i class="icon-calendar icon-white"></i> Events</a></li>
         </ul>
       </div>
     </div>
@@ -59,7 +62,14 @@
       <div id="map-canvas"></div>
     </div>
     
+    <div data-role="popup">
+      <ul data-role="listview" data-inset="true">
+        <li><a href="#"><a>Walk here</a></li>
+      </ul>
+    </div>
+    
   </div>
+  
   
   <div data-role="page" id="places">
   
@@ -69,6 +79,7 @@
           <li><a href="#home"><i class="icon-home icon-white"></i> Home</a></li>
           <li><a href="#map"><i class="icon-globe icon-white"></i> Map</a></li>
           <li><a href="#places"><i class="icon-map-marker icon-white"></i> Places</a></li>
+          <li><a href="#events"><i class="icon-calendar icon-white"></i> Events</a></li>
         </ul>
       </div>
     </div>
@@ -79,6 +90,29 @@
         <li><a href="#map" data-lat="60.185062" data-long="24.832303">Dipoli</a></li>
         <li><a href="#map" data-lat="60.185945" data-long="24.832424">Täffä</a></li>
         <li><a href="#map" data-lat="60.185257" data-long="24.826668">Alvari</a></li>
+      </ul>
+    </div>
+    
+  </div>
+  
+  
+  <div data-role="page" id="events">
+  
+    <div data-role="header" data-position="fixed">
+      <div data-role="navbar">
+        <ul>
+          <li><a href="#home"><i class="icon-home icon-white"></i> Home</a></li>
+          <li><a href="#map"><i class="icon-globe icon-white"></i> Map</a></li>
+          <li><a href="#places"><i class="icon-map-marker icon-white"></i> Places</a></li>
+          <li><a href="#events"><i class="icon-calendar icon-white"></i> Events</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div data-role="content">
+      <ul id="placesList" data-role="listview" data-inset="true">
+        <li data-role="list-divider">Events</li>
+        <li><a href="#map">Coming soon...</a></li>
       </ul>
     </div>
     
