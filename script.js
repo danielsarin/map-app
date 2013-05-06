@@ -34,11 +34,55 @@ $(document).ready(function() {
   var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
   directionsDisplay.setMap(map);
   
+  var markersArray = []; // store all map markers here
+  
+  var curLoc = null; // Current user-entered location
+  var curLocInfoOn = null; 
+  var curLocInfoOff = null;
+  var curLocInfoWindow = null;
+  
+  /******
+     * Listener for setting your current location (marker) on the map by clicking.
+     * Keeps track of one current location, adding and removing listeners each time
+     * the location is changed with another click.
+     */
   google.maps.event.addListener(map, 'click', function(event) {
-    alert(event.latLng);
+	var marker = new google.maps.Marker({
+            map: map,
+            position: event.latLng,
+            title: 'You are here.',
+	});
+
+	if (curLoc != null) {
+	    removeCurLoc();
+	} 
+	
+	    
+	curLoc = marker; // Overwrites any previously set location
+	
+	var infoText = 'You are here. Click to remove.';
+	
+	curLocRemoval = google.maps.event.addListener(marker, 'click', function() {
+	    removeCurLoc();
+	});
+
+	curLocInfoOn = google.maps.event.addListener(marker, 'mouseover', function() {
+	    curLocInfoWindow = new google.maps.InfoWindow({content: infoText});
+	    curLocInfoWindow.open(map, this);
+	});
+	curLocInfoOff = google.maps.event.addListener(marker, 'mouseout', function() {
+	    curLocInfoWindow.close();
+	});
   });
   
-  var markersArray = []; // store all map markers here
+  
+  // Function for clearing the current location listeners and the current location marker
+  function removeCurLoc() {
+	  google.maps.event.removeListener(curLocInfoOn);
+	  google.maps.event.removeListener(curLocInfoOff);
+	  google.maps.event.removeListener(curLocRemoval);
+	  curLoc.setMap(null);
+  }
   
   // function for removing markers
   function removeMarkers() {
@@ -296,7 +340,7 @@ $(document).ready(function() {
       markersArray.push(marker);
       currentPosition = marker.getPosition();
       
-      var directionsAnchor = '<a id="directionsLink" href="#">Get directions</a>';
+      var directionsAnchor = '<a id="directionsLink" href="#">Show the path here</a>';
       google.maps.event.addListener(marker, 'click', function() {
           var infoWindow = new google.maps.InfoWindow({content: directionsAnchor});
           infoWindow.open(map, this);
@@ -306,23 +350,37 @@ $(document).ready(function() {
   
   
   $(document).on('click', '#directionsLink', function() {
-      if ('geolocation' in navigator) {
-          $.mobile.loading('show');
-          navigator.geolocation.getCurrentPosition(function(position) {
-              var start = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-              var end = markersArray[0].getPosition();
-              var request = {
+      if (curLoc != null && curLoc.getMap() != null) {
+	      var start = curLoc.getPosition();
+	      var end = markersArray[0].getPosition();
+	      var request = {
                   origin: start,
                   destination: end,
                   travelMode: google.maps.TravelMode.WALKING
-              };
-              directionsService.route(request, function(result, status) {
+	      };
+	      directionsService.route(request, function(result, status) {
                   if (status == google.maps.DirectionsStatus.OK) {
-                      directionsDisplay.setDirections(result);
+		      directionsDisplay.setDirections(result);
                   }
-              });
-              $.mobile.loading('hide');
+	      });
+
+	    } else if ('geolocation' in navigator) {
+        $.mobile.loading('show');
+        navigator.geolocation.getCurrentPosition(function(position) {
+          var start = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+          var end = markersArray[0].getPosition();
+          var request = {
+              origin: start,
+              destination: end,
+              travelMode: google.maps.TravelMode.WALKING
+          };
+          directionsService.route(request, function(result, status) {
+              if (status == google.maps.DirectionsStatus.OK) {
+                  directionsDisplay.setDirections(result);
+              }
           });
+          $.mobile.loading('hide');
+        });
       } else {
           alert("I'm sorry, but geolocation services are not supported by your browser.");
       }
