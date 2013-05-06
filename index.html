@@ -31,13 +31,10 @@
     </div>
     
     <div data-role="content">
-      <input id="searchField" type="search" placeholder="Hae" />
-      <input id="searchButton" type="button" value="Hae" />
-      <ul id="myPlaces" data-role="listview" data-inset="true" class="ui-icon-alt">
+      <input id="searchField" type="search" placeholder="Search" />
+      <input id="searchButton" type="button" value="Search" />
+      <ul id="myPlaces" data-role="listview" data-inset="true" class="ui-icon-alt" data-split-theme="d">
         <li data-role="list-divider">Omat paikat</li>
-        <li><a href="#map">Test</a></li>
-        <li><a href="#map">Jotain</a></li>
-        <li><a href="#map">Nimi</a></li>
       </ul>
       <ul id="searchResults" data-role="listview" data-inset="true" class="ui-icon-alt"></ul>
       <div id="noResults"></div>
@@ -88,17 +85,72 @@
     <div data-role="content">
       <ul id="restaurants" data-role="listview" data-role="collapsible-set" data-inset="true" class="ui-icon-alt">
         <li data-role="list-divider">Restaurants</li>
-        <li><a href="#map" data-lat="60.185676" data-long="24.826923" data-type="restaurant">Alvari</a></li>
-        <li><a href="#map" data-lat="60.185253" data-long="24.833028" data-type="restaurant">Cantina</a></li>
-        <li><a href="#map" data-lat="60.184943" data-long="24.832170" data-type="restaurant">Dipoli</a></li>
-        <li><a href="#map" data-lat="60.182851" data-long="24.825340" data-type="restaurant">Kasper</a></li>
-        <li><a href="#map" data-lat="60.187110" data-long="24.826499" data-type="restaurant">Konetekniikka</a></li>
-        <li><a href="#map" data-lat="60.188228" data-long="24.829642" data-type="restaurant">Kvarkki</a></li>
-        <li><a href="#map" data-lat="60.180837" data-long="24.825247" data-type="restaurant">Puu 2</a></li>
-        <li><a href="#map" data-lat="60.188769" data-long="24.831938" data-type="restaurant">Sähkötekniikka</a></li>
-        <li><a href="#map" data-lat="60.186897" data-long="24.821687" data-type="restaurant">Tietotekniikka</a></li>
-        <li><a href="#map" data-lat="60.187308" data-long="24.819402" data-type="restaurant">TUAS</a></li>
-        <li><a href="#map" data-lat="60.186078" data-long="24.832939" data-type="restaurant">Täffä</a></li>
+        <li>
+          <a href="#map" data-lat="60.185676" data-long="24.826923" data-type="restaurant">
+            <h2>Alvari</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.185253" data-long="24.833028" data-type="restaurant">
+            <h2>Cantina</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.184943" data-long="24.832170" data-type="restaurant">
+            <h2>Dipoli</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.182851" data-long="24.825340" data-type="restaurant">
+            <h2>Kasper</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.187110" data-long="24.826499" data-type="restaurant">
+            <h2>Konetekniikka</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.188228" data-long="24.829642" data-type="restaurant">
+            <h2>Kvarkki</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.180837" data-long="24.825247" data-type="restaurant">
+            <h2>Puu 2</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.188769" data-long="24.831938" data-type="restaurant">
+            <h2>Sähkötekniikka</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.186897" data-long="24.821687" data-type="restaurant">
+            <h2>Tietotekniikka</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.187308" data-long="24.819402" data-type="restaurant">
+            <h2>TUAS</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
+        <li>
+          <a href="#map" data-lat="60.186078" data-long="24.832939" data-type="restaurant">
+            <h2>Täffä</h2>
+            <p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p>
+          </a>
+        </li>
       </ul>
     </div>
     

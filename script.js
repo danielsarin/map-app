@@ -1,5 +1,26 @@
 $(document).ready(function() {
-
+  
+  /* Fetch saved places from local storage */
+  if (typeof(Storage) !== 'undefined') {
+    // count = number of places stored
+    // places = the stored places
+    if (localStorage.count) {
+      //localStorage.count = 0;
+      if (localStorage.places) {
+        var jsonObj = JSON.parse(localStorage.places);
+        for (var i = 0; i < Number(localStorage.count); i++) {
+          var cur = JSON.parse(jsonObj[i]);
+          var item = '<li><a href="#map" data-lat="'+cur.lat+'" data-long="'+cur.long+'" data-type="'+cur.type+'"><h2>'+cur.title+'</h2><p class="ui-li-aside"><button id="removePlace" data-inline="true" data-icon="delete" data-iconpos="notext" data-id="'+i+'"></button></p></a></li>';
+          $('#myPlaces').append(item);
+        }
+        $('#myPlaces').listview('refresh');
+        $('#home').trigger('create'); // refresh jQM controls
+      }
+    } else {
+      localStorage.count = 0;
+    }
+  }
+  
   /* Initialize map */
   var currentPosition = new google.maps.LatLng(60.18711,24.83192);
   
@@ -12,6 +33,10 @@ $(document).ready(function() {
   };
   var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
   directionsDisplay.setMap(map);
+  
+  google.maps.event.addListener(map, 'click', function(event) {
+    alert(event.latLng);
+  });
   
   var markersArray = []; // store all map markers here
   
@@ -145,7 +170,7 @@ $(document).ready(function() {
         $('#searchResults').append(item);
       }
       for (i in bindings1) {
-        var item = '<li><a href="#map" data-lat="'+bindings1[i].lat.value+'" data-long="'+bindings1[i].long.value+'" data-type="person"><h2>'+bindings1[i].name.value+'</h2><p>'+bindings1[i].label.value+'</p></a></li>';
+        var item = '<li><a href="#map" data-lat="'+bindings1[i].lat.value+'" data-long="'+bindings1[i].long.value+'" data-type="person"><h2>'+bindings1[i].name.value+'</h2><p>'+bindings1[i].label.value+'</p><p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p></a></li>';
         $('#searchResults').append(item);
       }
       
@@ -157,7 +182,7 @@ $(document).ready(function() {
         $('#searchResults').append(item);
       }
       for (i in bindings2) {
-        var item = '<li><a href="#map" data-lat="'+bindings2[i].lat.value+'" data-long="'+bindings2[i].long.value+'" data-type="course"><h2>'+bindings2[i].code.value+' '+bindings2[i].courseTitle.value+'</h2><p>'+bindings2[i].label.value+'</p></a></li>';
+        var item = '<li><a href="#map" data-lat="'+bindings2[i].lat.value+'" data-long="'+bindings2[i].long.value+'" data-type="course"><h2>'+bindings2[i].code.value+' '+bindings2[i].courseTitle.value+'</h2><p>'+bindings2[i].label.value+'</p><p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p></a></li>';
         $('#searchResults').append(item);
       }
       
@@ -169,11 +194,12 @@ $(document).ready(function() {
         $('#searchResults').append(item);
       }
       for (i in bindings3) {
-        var item = '<li><a href="#map" data-lat="'+bindings3[i].lat.value+'" data-long="'+bindings3[i].long.value+'" data-type="dep"><h2>'+bindings3[i].buildingname.value+', '+bindings3[i].label.value+'</h2><p>'+bindings3[i].address.value+'</p></a></li>';
+        var item = '<li><a href="#map" data-lat="'+bindings3[i].lat.value+'" data-long="'+bindings3[i].long.value+'" data-type="dep"><h2>'+bindings3[i].buildingname.value+', '+bindings3[i].label.value+'</h2><p>'+bindings3[i].address.value+'</p><p class="ui-li-aside"><button id="addPlace" data-inline="true" data-icon="plus" data-iconpos="notext"></button></p></a></li>';
         $('#searchResults').append(item);
       }
       
       $('#searchResults').listview('refresh');
+      $('#home').trigger('create'); // refresh jQM controls
       $.mobile.loading('hide');
       
       // if there are no results
@@ -185,9 +211,72 @@ $(document).ready(function() {
   
   
   
+  /* Hide search results and show my places when clear button is clicked */
+  $(document).on('click', '.ui-input-clear', function() {
+    $('#searchResults').html('');
+    $('#myPlaces').show();
+  });
+  
+  
+  /* Add place to my places */
+  $(document).on('click', '#addPlace', function() {
+    if (typeof(Storage) !== 'undefined') {
+      var newObj = { 'lat': $(this).closest('a').attr('data-lat'), 
+            'long': $(this).closest('a').attr('data-long'),
+            'type': $(this).closest('a').attr('data-type'),
+            'title': $(this).closest('a').children('h2')[0].innerHTML };
+      var jsonObj;
+      if (localStorage.places) {
+        jsonObj = JSON.parse(localStorage.places);
+        
+      } else {
+        jsonObj = JSON.parse('');
+      }
+      jsonObj[localStorage.count] = JSON.stringify(newObj);
+      jsonString = JSON.stringify(jsonObj);
+      localStorage.places = jsonString;
+      
+      var cur = JSON.parse(jsonObj[Number(localStorage.count)]);
+      var item = '<li><a href="#map" data-lat="'+cur.lat+'" data-long="'+cur.long+'" data-type="dep"><h2>'+cur.title+'</h2><p class="ui-li-aside"><button id="removePlace" data-inline="true" data-icon="delete" data-iconpos="notext"></button></p></a></li>';
+      $('#myPlaces').append(item);
+      
+      $('#myPlaces').listview('refresh');
+      $('#home').trigger('create'); // refresh jQM controls
+      
+      localStorage.count = Number(localStorage.count) + 1;
+    } else {
+      alert("Local storage is not supported.");
+    }
+    return false;
+  });
+  
+  
+  /* Remove place from my places */
+  $(document).on('click', '#removePlace', function() {
+    if (typeof(Storage) !== 'undefined') {
+      if (localStorage.places) {
+        jsonObj = JSON.parse(localStorage.places);
+        delete jsonObj[$(this).attr('data-id')];
+        jsonString = JSON.stringify(jsonObj);
+        localStorage.places = jsonString;
+        $(this).closest('li').remove();
+        
+        $('#myPlaces').listview('refresh');
+        $('#home').trigger('create'); // refresh jQM controls
+        
+        localStorage.count = Number(localStorage.count) - 1;
+      }
+    } else {
+      alert("Local storage is not supported.");
+    }
+    return false;
+  });
+  
+  
+  
   
   /* Add place marker on map when a link is clicked */
-  $(document).on('click', '#searchResults a, #restaurants a', function() {
+  $(document).on('click', '#searchResults a, #myPlaces a, #restaurants a', function() {
       var lat = $(this).attr('data-lat');
       var long = $(this).attr('data-long');
       
