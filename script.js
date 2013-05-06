@@ -145,7 +145,7 @@ $(document).ready(function() {
         $('#searchResults').append(item);
       }
       for (i in bindings1) {
-        var item = '<li><a href="#map" data-lat="'+bindings1[i].lat.value+'" data-long="'+bindings1[i].long.value+'"><h2>'+bindings1[i].name.value+'</h2><p>'+bindings1[i].label.value+'</p></a></li>';
+        var item = '<li><a href="#map" data-lat="'+bindings1[i].lat.value+'" data-long="'+bindings1[i].long.value+'" data-type="person"><h2>'+bindings1[i].name.value+'</h2><p>'+bindings1[i].label.value+'</p></a></li>';
         $('#searchResults').append(item);
       }
       
@@ -157,7 +157,7 @@ $(document).ready(function() {
         $('#searchResults').append(item);
       }
       for (i in bindings2) {
-        var item = '<li><a href="#map" data-lat="'+bindings2[i].lat.value+'" data-long="'+bindings2[i].long.value+'"><h2>'+bindings2[i].code.value+' '+bindings2[i].courseTitle.value+'</h2><p>'+bindings2[i].label.value+'</p></a></li>';
+        var item = '<li><a href="#map" data-lat="'+bindings2[i].lat.value+'" data-long="'+bindings2[i].long.value+'" data-type="course"><h2>'+bindings2[i].code.value+' '+bindings2[i].courseTitle.value+'</h2><p>'+bindings2[i].label.value+'</p></a></li>';
         $('#searchResults').append(item);
       }
       
@@ -169,7 +169,7 @@ $(document).ready(function() {
         $('#searchResults').append(item);
       }
       for (i in bindings3) {
-        var item = '<li><a href="#map" data-lat="'+bindings3[i].lat.value+'" data-long="'+bindings3[i].long.value+'"><h2>'+bindings3[i].buildingname.value+', '+bindings3[i].label.value+'</h2><p>'+bindings3[i].address.value+'</p></a></li>';
+        var item = '<li><a href="#map" data-lat="'+bindings3[i].lat.value+'" data-long="'+bindings3[i].long.value+'" data-type="dep"><h2>'+bindings3[i].buildingname.value+', '+bindings3[i].label.value+'</h2><p>'+bindings3[i].address.value+'</p></a></li>';
         $('#searchResults').append(item);
       }
       
@@ -187,15 +187,22 @@ $(document).ready(function() {
   
   
   /* Add place marker on map when a link is clicked */
-  $(document).on('click', '#searchResults a, #placesList a', function() {
+  $(document).on('click', '#searchResults a, #restaurants a', function() {
       var lat = $(this).attr('data-lat');
       var long = $(this).attr('data-long');
+      
+      var type = $(this).attr('data-type');
+      if (!type) {
+        type = 'marker';
+      }
       
       removeMarkers();
       var marker = new google.maps.Marker({
           map: map,
           position: new google.maps.LatLng(lat, long),
-          title: $(this).text()
+          title: $(this).text(),
+          icon: 'images/' + type + '.png',
+          shadow: 'images/' + type + '_shadow.png'
       });
       markersArray.push(marker);
       currentPosition = marker.getPosition();
