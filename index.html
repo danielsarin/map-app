@@ -34,8 +34,9 @@
       <input id="searchField" type="search" placeholder="Search" />
       <input id="searchButton" type="button" value="Search" />
       <ul id="myPlaces" data-role="listview" data-inset="true" class="ui-icon-alt" data-split-theme="d">
-        <li data-role="list-divider">Omat paikat</li>
+        <li data-role="list-divider">My places</li>
       </ul>
+      <p id="noPlaces"><em>No places stored</em></p>
       <ul id="searchResults" data-role="listview" data-inset="true" class="ui-icon-alt"></ul>
       <div id="noResults"></div>
     </div>
@@ -171,9 +172,8 @@
     </div>
     
     <div data-role="content">
-      <ul id="placesList" data-role="listview" data-inset="true">
-        <li data-role="list-divider">Events</li>
-        <li><a href="#map">Coming soon...</a></li>
+      <ul id="aaltoEvents" data-role="listview" data-inset="true">
+        <li data-role="list-divider"><h2>Aalto Events</h2><p class="ui-li-aside"><button id="fetchAaltoEvents" data-inline="true" data-mini="true">Fetch</button></p></li>
       </ul>
     </div>
     

@@ -15,6 +15,9 @@ $(document).ready(function() {
         }
         $('#myPlaces').listview('refresh');
         $('#home').trigger('create'); // refresh jQM controls
+        if (i > 0) {
+          $('#noPlaces').hide();
+        }
       }
     } else {
       localStorage.count = 0;
@@ -203,6 +206,7 @@ $(document).ready(function() {
               cache: false, dataType: 'jsonp' })
             ).then(function(results1, results2, results3) {
       $('#myPlaces').hide();
+      $('#noPlaces').hide();
       $('#searchResults').show();
       $('#searchResults, #noResults').html('');
       
@@ -259,6 +263,9 @@ $(document).ready(function() {
   $(document).on('click', '.ui-input-clear', function() {
     $('#searchResults').html('');
     $('#myPlaces').show();
+    if (Number(localStorage.count) == 0) {
+        $('#noPlaces').show();
+    }
   });
   
   
@@ -274,7 +281,7 @@ $(document).ready(function() {
         jsonObj = JSON.parse(localStorage.places);
         
       } else {
-        jsonObj = JSON.parse('');
+        jsonObj = JSON.parse('{}');
       }
       jsonObj[localStorage.count] = JSON.stringify(newObj);
       jsonString = JSON.stringify(jsonObj);
@@ -287,6 +294,8 @@ $(document).ready(function() {
       $('#myPlaces').listview('refresh');
       $('#home').trigger('create'); // refresh jQM controls
       
+      $('#noPlaces').hide();
+      
       localStorage.count = Number(localStorage.count) + 1;
     } else {
       alert("Local storage is not supported.");
@@ -298,7 +307,7 @@ $(document).ready(function() {
   /* Remove place from my places */
   $(document).on('click', '#removePlace', function() {
     if (typeof(Storage) !== 'undefined') {
-      if (localStorage.places) {
+      if (localStorage.places && Number(localStorage.count) > 0) {
         jsonObj = JSON.parse(localStorage.places);
         delete jsonObj[$(this).attr('data-id')];
         jsonString = JSON.stringify(jsonObj);
@@ -309,6 +318,10 @@ $(document).ready(function() {
         $('#home').trigger('create'); // refresh jQM controls
         
         localStorage.count = Number(localStorage.count) - 1;
+        
+        if (Number(localStorage.count) == 0) {
+          $('#noPlaces').show();
+        }
       }
     } else {
       alert("Local storage is not supported.");
@@ -340,9 +353,10 @@ $(document).ready(function() {
       markersArray.push(marker);
       currentPosition = marker.getPosition();
       
+      var title = '<p>'+$(this).closest('a').children('h2')[0].innerHTML+'</p>';
       var directionsAnchor = '<a id="directionsLink" href="#">Show the path here</a>';
       google.maps.event.addListener(marker, 'click', function() {
-          var infoWindow = new google.maps.InfoWindow({content: directionsAnchor});
+          var infoWindow = new google.maps.InfoWindow({content: title+ directionsAnchor});
           infoWindow.open(map, this);
       });
   	
@@ -385,6 +399,12 @@ $(document).ready(function() {
           alert("I'm sorry, but geolocation services are not supported by your browser.");
       }
 
+  });
+  
+  
+  
+  $(document).on('click', '#fetchAaltoEvents', function() {
+    alert('Not implemented.');
   });
   
   
