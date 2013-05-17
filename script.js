@@ -5,7 +5,6 @@ $(document).ready(function() {
     // count = number of places stored
     // places = the stored places
     if (localStorage.count) {
-      //localStorage.count = 0;
       if (localStorage.places) {
         var jsonObj = JSON.parse(localStorage.places);
         for (var i = 0; i < Number(localStorage.count); i++) {
@@ -50,32 +49,32 @@ $(document).ready(function() {
      * the location is changed with another click.
      */
   google.maps.event.addListener(map, 'click', function(event) {
-	var marker = new google.maps.Marker({
-            map: map,
-            position: event.latLng,
-            title: 'You are here.',
-	});
+	  var marker = new google.maps.Marker({
+              map: map,
+              position: event.latLng,
+              title: 'You are here.',
+	  });
 
-	if (curLoc != null) {
-	    removeCurLoc();
-	} 
+	  if (curLoc != null) {
+	      removeCurLoc();
+	  } 
 	
-	    
-	curLoc = marker; // Overwrites any previously set location
+	      
+	  curLoc = marker; // Overwrites any previously set location
 	
-	var infoText = 'You are here. Click to remove.';
+	  var infoText = 'You are here. Click to remove.';
 	
-	curLocRemoval = google.maps.event.addListener(marker, 'click', function() {
-	    removeCurLoc();
-	});
+	  curLocRemoval = google.maps.event.addListener(marker, 'click', function() {
+	      removeCurLoc();
+	  });
 
-	curLocInfoOn = google.maps.event.addListener(marker, 'mouseover', function() {
-	    curLocInfoWindow = new google.maps.InfoWindow({content: infoText});
-	    curLocInfoWindow.open(map, this);
-	});
-	curLocInfoOff = google.maps.event.addListener(marker, 'mouseout', function() {
-	    curLocInfoWindow.close();
-	});
+	  curLocInfoOn = google.maps.event.addListener(marker, 'mouseover', function() {
+	      curLocInfoWindow = new google.maps.InfoWindow({content: infoText});
+	      curLocInfoWindow.open(map, this);
+	  });
+	  curLocInfoOff = google.maps.event.addListener(marker, 'mouseout', function() {
+	      curLocInfoWindow.close();
+	  });
   });
   
   
@@ -344,11 +343,11 @@ $(document).ready(function() {
       
       removeMarkers();
       var marker = new google.maps.Marker({
-          map: map,
-          position: new google.maps.LatLng(lat, long),
-          title: $(this).text(),
-          icon: 'images/' + type + '.png',
-          shadow: 'images/' + type + '_shadow.png'
+        map: map,
+        position: new google.maps.LatLng(lat, long),
+        title: $(this).text(),
+        icon: 'images/' + type + '.png',
+        shadow: 'images/' + type + '_shadow.png'
       });
       markersArray.push(marker);
       currentPosition = marker.getPosition();
@@ -356,26 +355,27 @@ $(document).ready(function() {
       var title = '<p>'+$(this).closest('a').children('h2')[0].innerHTML+'</p>';
       var directionsAnchor = '<a id="directionsLink" href="#">Show the path here</a>';
       google.maps.event.addListener(marker, 'click', function() {
-          var infoWindow = new google.maps.InfoWindow({content: title+ directionsAnchor});
-          infoWindow.open(map, this);
+        var infoWindow = new google.maps.InfoWindow({content: title+ directionsAnchor});
+        infoWindow.open(map, this);
       });
   	
   });
   
   
+  /* Get directions from current location to target */
   $(document).on('click', '#directionsLink', function() {
       if (curLoc != null && curLoc.getMap() != null) {
 	      var start = curLoc.getPosition();
 	      var end = markersArray[0].getPosition();
 	      var request = {
-                  origin: start,
-                  destination: end,
-                  travelMode: google.maps.TravelMode.WALKING
+          origin: start,
+          destination: end,
+          travelMode: google.maps.TravelMode.WALKING
 	      };
 	      directionsService.route(request, function(result, status) {
-                  if (status == google.maps.DirectionsStatus.OK) {
-		      directionsDisplay.setDirections(result);
-                  }
+          if (status == google.maps.DirectionsStatus.OK) {
+            directionsDisplay.setDirections(result);
+          }
 	      });
 
 	    } else if ('geolocation' in navigator) {
@@ -384,14 +384,14 @@ $(document).ready(function() {
           var start = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
           var end = markersArray[0].getPosition();
           var request = {
-              origin: start,
-              destination: end,
-              travelMode: google.maps.TravelMode.WALKING
+            origin: start,
+            destination: end,
+            travelMode: google.maps.TravelMode.WALKING
           };
           directionsService.route(request, function(result, status) {
-              if (status == google.maps.DirectionsStatus.OK) {
-                  directionsDisplay.setDirections(result);
-              }
+            if (status == google.maps.DirectionsStatus.OK) {
+              directionsDisplay.setDirections(result);
+            }
           });
           $.mobile.loading('hide');
         });
@@ -402,7 +402,7 @@ $(document).ready(function() {
   });
   
   
-  
+  /* TODO: Fetch Aalto events */
   $(document).on('click', '#fetchAaltoEvents', function() {
     alert('Not implemented.');
   });
